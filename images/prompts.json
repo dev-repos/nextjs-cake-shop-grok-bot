@@ -1,85 +1,125 @@
 {
   "style": "Warm, natural-light food photography for Frostwell Cakes, a small custom cake studio. Palette of soft cream, rich chocolate brown and raspberry pink. Shallow depth of field, soft shadows, clean uncluttered backgrounds (cream linen, pale wood or matte plaster). Appetising, realistic textures. Absolutely no text, letters, numbers, logos, signage or watermarks anywhere in the image. If hands appear they must look natural with five fingers.",
-  "output": "Save each image as WebP in public/images using the file name below, sized for phones (longest side about 1200 px).",
+  "output": "Saved as WebP (quality 80) in public/images using the file name below, sized for phones (about 1000 px on the longest side). width and height are the saved file's pixel size.",
   "images": [
     {
       "id": "hero-cake",
       "file": "public/images/hero-cake.webp",
-      "usedOn": ["/ (hero)"],
-      "aspectRatio": "4:5",
-      "alt": "A tall three-layer chocolate cake with raspberry cream frosting and fresh raspberries on a cream cake stand",
-      "prompt": "Hero photograph of a tall three-layer custom celebration cake on a pale ceramic cake stand. Smooth cream-coloured buttercream with a glossy dark chocolate drip running down the sides, crowned with fresh raspberries, a few chocolate curls and tiny gold leaf flecks. One clean slice removed to reveal moist chocolate sponge layers with raspberry jam and vanilla cream. Soft morning window light from the left, cream linen tablecloth, blurred warm kitchen background in cream and chocolate tones, a small bowl of raspberries out of focus in the foreground. Portrait 4:5 composition with the cake centred and some headroom. No text, no logos, no people."
+      "usedOn": [
+        "/ (hero)"
+      ],
+      "aspectRatio": "4:3",
+      "width": 960,
+      "height": 720,
+      "alt": "A tall cream-frosted layer cake with a dark chocolate drip and fresh raspberries on a cake stand, one slice cut to show chocolate sponge and raspberry filling",
+      "prompt": "Hero photograph of a tall three-layer custom celebration cake on a pale ceramic cake stand. Smooth cream-coloured buttercream with a glossy dark chocolate drip running down the sides, crowned with fresh raspberries, a few chocolate curls and tiny gold leaf flecks. One clean slice removed to reveal moist chocolate sponge layers with raspberry jam and vanilla cream. Soft morning window light from the left, cream linen tablecloth, blurred warm kitchen background in cream and chocolate tones, a small bowl of raspberries out of focus in the foreground. Landscape 4:3 composition with the whole cake centred and some headroom. No text, no logos, no people."
     },
     {
       "id": "featured-raspberry-chocolate-torte",
       "file": "public/images/featured-raspberry-chocolate-torte.webp",
-      "usedOn": ["/ (featured cakes)"],
-      "aspectRatio": "1:1",
-      "alt": "Raspberry chocolate torte with a mirror-glaze top and fresh raspberries",
-      "prompt": "Square overhead-angled (45 degree) photo of a round raspberry chocolate torte with a glossy dark chocolate mirror glaze top, ringed with fresh raspberries and small piped rosettes of pink raspberry buttercream. Sits on a matte cream plate on a pale wooden table, a cake server and a few scattered raspberries beside it. Soft diffused daylight, rich chocolate and raspberry colours, shallow depth of field. No text, no logos, no people."
+      "usedOn": [
+        "/ (featured cakes)"
+      ],
+      "aspectRatio": "4:3",
+      "width": 960,
+      "height": 720,
+      "alt": "Chocolate torte with a glossy ganache top, ringed with fresh raspberries and pink buttercream rosettes",
+      "prompt": "Landscape 4:3 overhead-angled (45 degree) photo of a round raspberry chocolate torte with a glossy dark chocolate mirror glaze top, ringed with fresh raspberries and small piped rosettes of pink raspberry buttercream. Sits on a matte cream plate on a pale wooden table, a cake server and a few scattered raspberries beside it. Soft diffused daylight, rich chocolate and raspberry colours, shallow depth of field. No text, no logos, no people."
     },
     {
       "id": "featured-vanilla-berry",
       "file": "public/images/featured-vanilla-berry.webp",
-      "usedOn": ["/ (featured cakes)"],
-      "aspectRatio": "1:1",
-      "alt": "Vanilla bean naked cake layered with cream and mixed summer berries",
-      "prompt": "Square photo of a vanilla bean semi-naked layer cake with visible golden sponge layers, thin swipes of cream buttercream and fillings of whipped vanilla cream and strawberry compote. Topped generously with strawberries, raspberries, blueberries and a sprig of mint. Placed on a white cake stand against a soft cream plaster wall, gentle side lighting, airy and fresh summer feel. No text, no logos, no people."
+      "usedOn": [
+        "/ (featured cakes)"
+      ],
+      "aspectRatio": "4:3",
+      "width": 960,
+      "height": 720,
+      "alt": "Vanilla naked layer cake filled with cream and berry compote, topped with strawberries, raspberries, blueberries and mint",
+      "prompt": "Landscape 4:3 photo of a vanilla bean semi-naked layer cake with visible golden sponge layers, thin swipes of cream buttercream and fillings of whipped vanilla cream and strawberry compote. Topped generously with strawberries, raspberries, blueberries and a sprig of mint. Placed on a white cake stand against a soft cream plaster wall, gentle side lighting, airy and fresh summer feel. No text, no logos, no people."
     },
     {
       "id": "featured-salted-caramel-drip",
       "file": "public/images/featured-salted-caramel-drip.webp",
-      "usedOn": ["/ (featured cakes)"],
-      "aspectRatio": "1:1",
-      "alt": "Salted caramel drip cake with chocolate frosting and caramel shards",
-      "prompt": "Square eye-level photo of a tall milk-chocolate frosted cake with a thick glossy salted caramel drip running down the sides, topped with swirls of caramel buttercream, shards of amber caramel brittle, a few flaky sea salt crystals and small chocolate truffles. Warm cosy lighting, dark wood board, cream background softly blurred. Rich brown and golden tones. No text, no logos, no people."
+      "usedOn": [
+        "/ (featured cakes)"
+      ],
+      "aspectRatio": "4:3",
+      "width": 960,
+      "height": 720,
+      "alt": "Chocolate-frosted cake with a salted caramel drip, caramel shards and chocolate truffles on top",
+      "prompt": "Landscape 4:3 eye-level photo of a tall milk-chocolate frosted cake with a thick glossy salted caramel drip running down the sides, topped with swirls of caramel buttercream, shards of amber caramel brittle, a few flaky sea salt crystals and small chocolate truffles. Warm cosy lighting, dark wood board, cream background softly blurred. Rich brown and golden tones. No text, no logos, no people."
     },
     {
       "id": "featured-lemon-elderflower",
       "file": "public/images/featured-lemon-elderflower.webp",
-      "usedOn": ["/ (featured cakes)"],
-      "aspectRatio": "1:1",
-      "alt": "Lemon elderflower cake with pale buttercream and edible flowers",
-      "prompt": "Square photo of an elegant two-layer lemon elderflower cake covered in smooth pale ivory buttercream with a delicate textured palette-knife finish, decorated on one side with a crescent of edible flowers (white elderflower clusters, pale pink rose petals, small violas) and thin candied lemon slices. On a cream linen napkin with a light marble surface, bright soft daylight, gentle and romantic mood. No text, no logos, no people."
+      "usedOn": [
+        "/ (featured cakes)"
+      ],
+      "aspectRatio": "4:3",
+      "width": 960,
+      "height": 720,
+      "alt": "Ivory buttercream lemon cake decorated with elderflowers, edible flowers and candied lemon slices",
+      "prompt": "Landscape 4:3 photo of an elegant two-layer lemon elderflower cake covered in smooth pale ivory buttercream with a delicate textured palette-knife finish, decorated on one side with a crescent of edible flowers (white elderflower clusters, pale pink rose petals, small violas) and thin candied lemon slices. On a cream linen napkin with a light marble surface, bright soft daylight, gentle and romantic mood. No text, no logos, no people."
     },
     {
       "id": "service-birthday",
       "file": "public/images/service-birthday.webp",
-      "usedOn": ["/services (birthday cakes)"],
+      "usedOn": [
+        "/services (birthday cakes)"
+      ],
       "aspectRatio": "3:2",
-      "alt": "A colourful birthday cake with sprinkles and lit candles",
+      "width": 1080,
+      "height": 720,
+      "alt": "Pink birthday cake with rainbow sprinkles, a piped cream border and lit candles",
       "prompt": "Landscape 3:2 photo of a cheerful round birthday cake with smooth raspberry-pink buttercream, rainbow sprinkles around the base, a ruffled cream buttercream border and six slim lit candles with soft glowing flames. On a cream cake stand at a party table with blurred paper garlands and a few wrapped gifts in cream and chocolate tones in the background. Warm, joyful light. No text, no lettering on the cake, no numbers, no logos, no people."
     },
     {
       "id": "service-wedding",
       "file": "public/images/service-wedding.webp",
-      "usedOn": ["/services (wedding cakes)"],
+      "usedOn": [
+        "/services (wedding cakes)"
+      ],
       "aspectRatio": "3:2",
-      "alt": "A three-tier ivory wedding cake decorated with blush sugar flowers",
+      "width": 1080,
+      "height": 720,
+      "alt": "Three-tier white wedding cake with a cascade of pink and raspberry roses on a gold cake stand",
       "prompt": "Landscape 3:2 photo of an elegant three-tier wedding cake with smooth ivory fondant, subtle pearl details and a cascade of blush-pink and deep raspberry sugar roses with eucalyptus leaves trailing down one side. Standing on a gold-rimmed cake stand at a reception table with soft candlelight and out-of-focus fairy lights and white flowers behind. Romantic, refined, warm tones. No text, no toppers with words, no logos, no people."
     },
     {
       "id": "service-corporate",
       "file": "public/images/service-corporate.webp",
-      "usedOn": ["/services (corporate cakes)"],
+      "usedOn": [
+        "/services (corporate cakes)"
+      ],
       "aspectRatio": "3:2",
-      "alt": "A large rectangular sheet cake with neat chocolate and cream piping cut into squares at an office event",
+      "width": 1080,
+      "height": 720,
+      "alt": "Large cream sheet cake with chocolate piped borders and raspberry dots, with cut slices on plates",
       "prompt": "Landscape 3:2 photo of a large rectangular celebration sheet cake with smooth cream frosting, neat dark chocolate piped borders and a geometric pattern of raspberry and chocolate accents, a few squares already cut and placed on small plates. Set on a light wood table in a bright modern office meeting space with blurred plants and glass walls behind. Clean, professional, inviting. No text, no logos, no branding, no lettering on the cake, no people."
     },
     {
       "id": "service-cupcakes",
       "file": "public/images/service-cupcakes.webp",
-      "usedOn": ["/services (cupcakes)"],
+      "usedOn": [
+        "/services (cupcakes)"
+      ],
       "aspectRatio": "3:2",
-      "alt": "A dozen cupcakes with swirled chocolate, vanilla and raspberry frosting",
+      "width": 1080,
+      "height": 720,
+      "alt": "A dozen cupcakes with swirled chocolate, vanilla and raspberry frosting in a cream box",
       "prompt": "Landscape 3:2 slightly overhead photo of twelve cupcakes arranged in neat rows in a cream kraft box, in brown paper liners, with tall piped swirls of chocolate, vanilla and raspberry buttercream, topped alternately with a fresh raspberry, chocolate shavings and pearl sprinkles. Pale wooden table, soft natural light, a few loose raspberries and a piping bag out of focus at the edge. No text, no logos, no stickers on the box, no people."
     },
     {
       "id": "service-dessert-table",
       "file": "public/images/service-dessert-table.webp",
-      "usedOn": ["/services (dessert tables)"],
+      "usedOn": [
+        "/services (dessert tables)"
+      ],
       "aspectRatio": "3:2",
-      "alt": "A styled dessert table with a centrepiece cake, macarons, mini tarts and cake pops",
+      "width": 1080,
+      "height": 720,
+      "alt": "Dessert table with a tiered centrepiece cake, macarons, mini tarts, cake pops and mousse cups",
       "prompt": "Landscape 3:2 photo of a beautifully styled event dessert table: a two-tier cream and raspberry centrepiece cake in the middle, surrounded by cake stands of pastel pink and chocolate macarons, mini fruit tarts, chocolate-dipped strawberries, cake pops and small glass jars of chocolate mousse. Cream tablecloth, a soft floral garland of pink and white flowers along the front, warm evening event lighting with blurred guests-free background. Abundant, elegant, appetising. No text, no signs, no logos, no people."
     }
   ]

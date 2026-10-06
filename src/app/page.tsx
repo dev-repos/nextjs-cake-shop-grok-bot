@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ImagePlaceholder } from "@/components/ImagePlaceholder";
+import { SiteImage } from "@/components/SiteImage";
 import { featuredCakes, orderSteps, reviews, usd } from "@/lib/site";
 
 // The cake designer arrives in step 4 (/cakes). Until then the button takes
@@ -38,9 +38,11 @@ export default function Home() {
               </Link>
             </div>
           </div>
-          <ImagePlaceholder
+          <SiteImage
             id="hero-cake"
-            className="rounded-[2rem] shadow-xl shadow-cocoa-900/10"
+            preload
+            sizes="(min-width: 1152px) 532px, (min-width: 768px) calc(50vw - 44px), calc(100vw - 40px)"
+            className="aspect-[4/3] h-auto w-full rounded-[2rem] shadow-xl shadow-cocoa-900/10"
           />
         </div>
       </section>
@@ -94,7 +96,11 @@ export default function Home() {
                 key={cake.name}
                 className="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-cocoa-900/5"
               >
-                <ImagePlaceholder id={cake.imageId} />
+                <SiteImage
+                  id={cake.imageId}
+                  sizes="(min-width: 1152px) 268px, (min-width: 1024px) calc(25vw - 25px), (min-width: 640px) calc(50vw - 30px), calc(100vw - 40px)"
+                  className="aspect-[4/3] h-auto w-full"
+                />
                 <div className="p-5">
                   <h3 className="text-lg font-semibold text-cocoa-900">{cake.name}</h3>
                   <p className="mt-1 text-sm text-cocoa-700">{cake.description}</p>
