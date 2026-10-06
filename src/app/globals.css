@@ -26,6 +26,19 @@
   }
 }
 
+/*
+ * Phones: no text smaller than 16px. Tailwind's text-xs / text-sm read these variables,
+ * so small print is 16px below the sm breakpoint and keeps its compact size from 640px up.
+ */
+@media (width < 40rem) {
+  :root {
+    --text-xs: 1rem;
+    --text-xs--line-height: 1.5;
+    --text-sm: 1rem;
+    --text-sm--line-height: 1.5;
+  }
+}
+
 body {
   background: var(--color-cream-50);
   color: var(--color-cocoa-900);

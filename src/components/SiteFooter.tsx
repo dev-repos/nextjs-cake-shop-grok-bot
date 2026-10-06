@@ -16,24 +16,24 @@ export function SiteFooter() {
         </div>
         <nav aria-label="Footer" className="text-sm">
           <p className="font-semibold uppercase tracking-wider text-cream-200/60">Explore</p>
-          <ul className="mt-3 space-y-2">
+          <ul className="mt-2">
             <li>
-              <Link href="/" className="hover:text-raspberry-300">
+              <Link href="/" className="inline-flex min-h-11 items-center hover:text-raspberry-300">
                 Home
               </Link>
             </li>
             <li>
-              <Link href="/cakes" className="hover:text-raspberry-300">
+              <Link href="/cakes" className="inline-flex min-h-11 items-center hover:text-raspberry-300">
                 Cakes
               </Link>
             </li>
             <li>
-              <Link href="/services" className="hover:text-raspberry-300">
+              <Link href="/services" className="inline-flex min-h-11 items-center hover:text-raspberry-300">
                 Services &amp; prices
               </Link>
             </li>
             <li>
-              <Link href="/#how-it-works" className="hover:text-raspberry-300">
+              <Link href="/#how-it-works" className="inline-flex min-h-11 items-center hover:text-raspberry-300">
                 How ordering works
               </Link>
             </li>
@@ -41,14 +41,14 @@ export function SiteFooter() {
         </nav>
         <div className="text-sm">
           <p className="font-semibold uppercase tracking-wider text-cream-200/60">Say hello</p>
-          <ul className="mt-3 space-y-2">
+          <ul className="mt-2">
             <li>
-              <a href={`mailto:${site.email}`} className="hover:text-raspberry-300">
+              <a href={`mailto:${site.email}`} className="inline-flex min-h-11 items-center hover:text-raspberry-300">
                 {site.email}
               </a>
             </li>
-            <li>Pickup: {site.hours}</li>
-            <li>{site.city}</li>
+            <li className="py-1">Pickup: {site.hours}</li>
+            <li className="py-1">{site.city}</li>
           </ul>
         </div>
       </div>

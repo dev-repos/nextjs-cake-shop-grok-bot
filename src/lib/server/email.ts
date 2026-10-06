@@ -7,6 +7,8 @@ export type Email = {
   subject: string;
   text: string;
   html: string;
+  /** Optional fixed Message-ID, so a repeated send is recognised as the same message by mail clients that deduplicate. */
+  messageId?: string;
 };
 
 export type MailerMode = "gmail" | "log";
@@ -15,6 +17,11 @@ function gmailConfig() {
   const user = process.env.GMAIL_USER?.trim();
   const pass = process.env.GMAIL_APP_PASSWORD?.trim();
   return user && pass ? { user, pass } : null;
+}
+
+/** Domain for generated Message-IDs (the sender's domain when Gmail is configured). */
+export function messageIdDomain(): string {
+  return gmailConfig()?.user.split("@")[1] ?? "frostwellcakes.example";
 }
 
 export function mailerMode(): MailerMode {
@@ -44,6 +51,7 @@ export async function sendEmails(emails: Email[]): Promise<MailerMode> {
           "From: Frostwell Cakes <GMAIL_USER>",
           `To: ${email.to}`,
           email.replyTo ? `Reply-To: ${email.replyTo}` : null,
+          email.messageId ? `Message-ID: ${email.messageId}` : null,
           `Subject: ${email.subject}`,
           "",
           email.text,
@@ -58,14 +66,18 @@ export async function sendEmails(emails: Email[]): Promise<MailerMode> {
 
   const transporter = nodemailer.createTransport({ service: "gmail", auth: gmail });
   for (const email of emails) {
-    await transporter.sendMail({
+    const info = await transporter.sendMail({
       from: { name: "Frostwell Cakes", address: gmail.user },
       to: email.to,
       replyTo: email.replyTo,
       subject: email.subject,
       text: email.text,
       html: email.html,
+      messageId: email.messageId,
     });
+    console.info(
+      `[email] Sent "${email.subject}" messageId=${info.messageId} accepted=${JSON.stringify(info.accepted)} rejected=${JSON.stringify(info.rejected)}`,
+    );
   }
   return "gmail";
 }

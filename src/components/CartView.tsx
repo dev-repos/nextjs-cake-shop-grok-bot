@@ -51,7 +51,7 @@ export function CartView() {
         >
           Continue to checkout
         </Link>
-        <Link href="/cakes" className="mt-3 block text-center text-sm text-cream-200/85 hover:underline">
+        <Link href="/cakes" className="mt-2 flex min-h-11 items-center justify-center text-sm text-cream-200/85 hover:underline">
           Add another cake
         </Link>
       </aside>

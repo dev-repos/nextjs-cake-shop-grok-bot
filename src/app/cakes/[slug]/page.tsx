@@ -30,10 +30,10 @@ export default async function CakePage({ params }: PageProps<"/cakes/[slug]">) {
 
   return (
     <div className="mx-auto max-w-6xl px-5 pt-4 md:pt-8 lg:pb-20">
-      <nav aria-label="Breadcrumb" className="text-sm text-cocoa-500">
+      <nav aria-label="Breadcrumb" className="-my-1.5 text-sm text-cocoa-500">
         <ol className="flex flex-wrap items-center gap-1.5">
           <li>
-            <Link href="/cakes" className="font-medium text-raspberry-700 hover:underline">
+            <Link href="/cakes" className="inline-flex min-h-11 items-center font-medium text-raspberry-700 hover:underline">
               Cakes
             </Link>
           </li>
