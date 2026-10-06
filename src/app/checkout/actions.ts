@@ -9,6 +9,7 @@ import {
   priceLines,
 } from "@/lib/order";
 import { baseUrl } from "@/lib/server/base-url";
+import { HONEYPOT_FIELD } from "@/lib/order-config";
 import { bakeryAddress, sendEmails } from "@/lib/server/email";
 import { bakeryEmail, customerEmail } from "@/lib/server/order-emails";
 import {
@@ -18,6 +19,7 @@ import {
   type OrderPayload,
   signedOrderLinks,
 } from "@/lib/server/order-token";
+import { checkOrderRateLimit, recordOrder } from "@/lib/server/rate-limit";
 
 const UNAVAILABLE =
   "Sorry, online order requests aren't available right now. Please email us at hello@frostwellcakes.example and we'll take your order by email.";
@@ -37,6 +39,17 @@ export async function submitOrder(_prev: CheckoutState, formData: FormData): Pro
     const value = formData.get(key);
     return typeof value === "string" ? value : "";
   };
+
+  // Honeypot: the hidden "website" field is empty for people. If it's filled in, quietly drop
+  // the request with a neutral message and send nothing.
+  if (text(HONEYPOT_FIELD).trim() !== "") {
+    console.warn("[orders] Honeypot field filled in; request dropped, no emails sent.");
+    return {
+      status: "error",
+      formError: "Sorry, we couldn't send your order request. Please try again later, or email us at hello@frostwellcakes.example.",
+      fieldErrors: {},
+    };
+  }
 
   const parsed = checkoutSchema.safeParse({
     name: text("name"),
@@ -76,6 +89,17 @@ export async function submitOrder(_prev: CheckoutState, formData: FormData): Pro
   }
 
   const input = parsed.data;
+
+  const limit = await checkOrderRateLimit();
+  if (!limit.ok) {
+    console.warn("[orders] Rate limit reached; request refused, no emails sent.");
+    return {
+      status: "error",
+      formError: `You've sent several order requests in the last few minutes. Please wait about ${limit.retryAfterMinutes} minute${limit.retryAfterMinutes === 1 ? "" : "s"} and try again, or email us at hello@frostwellcakes.example.`,
+      fieldErrors: {},
+    };
+  }
+
   try {
     assertOrderSigningConfigured();
   } catch (error) {
@@ -109,6 +133,7 @@ export async function submitOrder(_prev: CheckoutState, formData: FormData): Pro
 
   try {
     const mode = await sendEmails([bakeryEmail(order, links, bakery), customerEmail(order, links, bakery)]);
+    await recordOrder();
     console.info(`[orders] Order ${order.n} received (${lines.length} line(s), total $${total}); emails ${mode === "gmail" ? "sent" : "logged"}.`);
   } catch (error) {
     console.error(`[orders] Sending emails for ${order.n} failed:`, error instanceof Error ? error.message : error);

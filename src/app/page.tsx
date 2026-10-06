@@ -94,17 +94,18 @@ export default function Home() {
           <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {featuredCakes.map((cake) => (
               <li key={cake.slug}>
-                <Link
-                  href={`/cakes/${cake.slug}`}
-                  className="group block h-full overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-cocoa-900/5 transition hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-raspberry-600"
-                >
+                <article className="group relative block h-full overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-cocoa-900/5 transition hover:shadow-md has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-raspberry-600">
                   <SiteImage
                     id={cake.imageId}
                     sizes="(min-width: 1152px) 268px, (min-width: 1024px) calc(25vw - 25px), (min-width: 640px) calc(50vw - 30px), calc(100vw - 40px)"
                     className="aspect-[4/3] h-auto w-full transition duration-300 group-hover:scale-[1.02]"
                   />
                   <div className="p-5">
-                    <h3 className="text-lg font-semibold text-cocoa-900">{cake.name}</h3>
+                    <h3 className="text-lg font-semibold text-cocoa-900">
+                      <Link href={`/cakes/${cake.slug}`} className="outline-none after:absolute after:inset-0 after:rounded-3xl">
+                        {cake.name}
+                      </Link>
+                    </h3>
                     <p className="mt-1 text-sm text-cocoa-700">{cake.description}</p>
                     <p className="mt-3 flex items-center justify-between text-sm text-cocoa-500">
                       <span>
@@ -113,12 +114,12 @@ export default function Home() {
                           {usd(fromPrice(cake))}
                         </span>
                       </span>
-                      <span className="font-semibold text-raspberry-700 group-hover:underline">
+                      <span aria-hidden="true" className="font-semibold text-raspberry-700 group-hover:underline">
                         Customise →
                       </span>
                     </p>
                   </div>
-                </Link>
+                </article>
               </li>
             ))}
           </ul>

@@ -17,6 +17,9 @@ export function CartLines({ lines, editable }: { lines: CartLine[]; editable: bo
         const cake = getCake(line.slug)!;
         const unit = lineUnitPrice(line);
         const c = line.choices;
+        const label = `${cake.name}, ${c.size} inch`;
+        // On the cart page the lines sit right under the h1; in checkout they're under "Your cakes" (h2).
+        const Heading = editable ? "h2" : "h3";
         return (
           <li key={line.id} className="flex gap-4 py-4 first:pt-0 last:pb-0">
             <SiteImage
@@ -26,7 +29,7 @@ export function CartLines({ lines, editable }: { lines: CartLine[]; editable: bo
             />
             <div className="min-w-0 flex-1">
               <div className="flex items-start justify-between gap-3">
-                <h3 className="font-semibold text-cocoa-900">
+                <Heading className="font-semibold text-cocoa-900">
                   {editable ? (
                     <Link href={customiseHref(line)} className="-my-2.5 inline-flex min-h-11 items-center hover:underline">
                       {cake.name}
@@ -36,7 +39,7 @@ export function CartLines({ lines, editable }: { lines: CartLine[]; editable: bo
                       {line.qty} × {cake.name}
                     </>
                   )}
-                </h3>
+                </Heading>
                 <p className="shrink-0 font-semibold text-cocoa-900 tabular-nums">{usd(unit * line.qty)}</p>
               </div>
               <p className="mt-0.5 text-sm [overflow-wrap:anywhere] text-cocoa-700">
@@ -49,41 +52,31 @@ export function CartLines({ lines, editable }: { lines: CartLine[]; editable: bo
                     <p className="text-xs text-cocoa-500">Requested pickup {formatDate(c.date)}</p>
                   ) : null}
                   <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
-                    <div className="inline-flex items-center rounded-full border border-cocoa-900/15 bg-white">
-                      <button
-                        type="button"
-                        onClick={() => setQuantity(line.id, line.qty - 1)}
-                        disabled={line.qty <= 1}
-                        aria-label={`Decrease quantity of ${cake.name}`}
-                        className="flex h-11 w-11 items-center justify-center rounded-full text-lg text-cocoa-800 hover:bg-cream-200 focus-visible:outline-2 focus-visible:outline-raspberry-600 disabled:opacity-35"
+                    <label className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 font-medium text-cocoa-800">
+                      Quantity<span className="sr-only"> of {label}</span>
+                      <select
+                        value={line.qty}
+                        onChange={(event) => setQuantity(line.id, Number(event.target.value))}
+                        className="min-h-11 rounded-full border border-cocoa-900/20 bg-white pr-8 pl-4 text-base font-semibold text-cocoa-900 tabular-nums focus-visible:outline-2 focus-visible:outline-raspberry-600"
                       >
-                        −
-                      </button>
-                      <span className="w-8 text-center font-semibold tabular-nums" aria-live="polite" aria-label={`Quantity ${line.qty}`}>
-                        {line.qty}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => setQuantity(line.id, line.qty + 1)}
-                        disabled={line.qty >= MAX_QTY}
-                        aria-label={`Increase quantity of ${cake.name}`}
-                        className="flex h-11 w-11 items-center justify-center rounded-full text-lg text-cocoa-800 hover:bg-cream-200 focus-visible:outline-2 focus-visible:outline-raspberry-600 disabled:opacity-35"
-                      >
-                        +
-                      </button>
-                    </div>
+                        {Array.from({ length: MAX_QTY }, (_, i) => i + 1).map((n) => (
+                          <option key={n} value={n}>
+                            {n}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
                     <span className="text-xs text-cocoa-500">{usd(unit)} each</span>
                     <span className="ml-auto flex gap-1 text-sm">
                       <Link href={customiseHref(line)} className="inline-flex min-h-11 min-w-11 items-center justify-center px-1 font-medium text-raspberry-700 hover:underline">
-                        Edit
+                        Edit<span className="sr-only"> {label}</span>
                       </Link>
                       <button
                         type="button"
                         onClick={() => removeFromCart(line.id)}
                         className="inline-flex min-h-11 min-w-11 items-center justify-center px-1 font-medium text-cocoa-700 hover:underline focus-visible:outline-2 focus-visible:outline-raspberry-600"
-                        aria-label={`Remove ${cake.name} from cart`}
                       >
-                        Remove
+                        Remove<span className="sr-only"> {label} from cart</span>
                       </button>
                     </span>
                   </div>

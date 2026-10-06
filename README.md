@@ -34,6 +34,31 @@ True one-time links need somewhere to record that a link was used, and this site
 
 Local development: copy `.env.example` to `.env.local` and set `ORDER_SECRET` (in `next dev` an insecure development-only key is used with a warning if it's missing).
 
+## Friendly to browser-using AI agents
+
+The site is built so an AI agent driving a browser can order a cake the same way a person does (no MCP, no extra APIs):
+
+- Semantic HTML: one `h1` per page, `header`, `nav`, `main`, `footer`, real links and buttons.
+- Every field has a visible label with the right `type`, `inputmode` and `autocomplete`; errors are text next to the field.
+- Buttons say what they do, e.g. "Add 8-inch Pistachio Rose to cart", "Quantity of Pistachio Rose, 8 inch", "Remove Pistachio Rose, 8 inch from cart". No hover-only, drag-only or icon-only controls, and no popups.
+- Prices, sizes, lead time, the order number and the order status are plain text.
+- schema.org JSON-LD: `Bakery` on every page and a `Product` with an `AggregateOffer` (one `Offer` per size, in USD) on each cake page.
+- [`/llms.txt`](https://nextjs-cake-shop-grok-bot.vercel.app/llms.txt) explains the shop, prices, lead time, the ordering steps and the customiser URL parameters. It is generated from the catalogue and prerendered as a static file at build time.
+
+### Spam protection (no CAPTCHA)
+
+- **Honeypot:** the checkout form has a hidden `website` field (off-screen, `inert`, `aria-hidden`, `tabindex="-1"`, `autocomplete="off"`, labelled "Leave this field empty"). People and accessibility-tree based agents never see it. If it's filled in, the request is quietly dropped with a neutral message and no emails are sent.
+- **Rate limit:** at most 3 order requests per 10 minutes, checked two ways: per client IP in the server's memory, and per browser in a signed HttpOnly cookie. This is best-effort. On Vercel each serverless instance has its own memory, so the IP limit is per instance, and clearing cookies resets the browser limit. A strict global limit would need a shared store such as KV.
+
+## Tests
+
+```bash
+npx playwright install chromium   # once
+npm run test:e2e                  # builds, starts a local production server and runs tests/
+```
+
+The tests run at 390 px against `next start` with a random throwaway `ORDER_SECRET` and empty Gmail variables, so emails are only logged (to `.playwright/server.log`). `tests/order-flow.spec.ts` drives the whole order flow using only `getByRole` and `getByLabel`, runs an axe accessibility check on every page (no serious or critical violations allowed), and tests the honeypot and the rate limit. `tests/structured-data.spec.ts` checks the JSON-LD and `/llms.txt`.
+
 ## Run it locally
 
 Requires Node.js 20.9 or newer.
@@ -45,7 +70,7 @@ npm run lint
 npm run build
 ```
 
-Built with Next.js (App Router), TypeScript and Tailwind CSS. Pages: `/` (landing), `/services`, `/cakes` (catalogue), `/cakes/<slug>` (customiser; choices are kept in the URL), `/cart`, `/checkout`, `/order/<number>` (signed order page) and `/order/<number>/accept` / `/decline` (bakery links).
+Built with Next.js (App Router), TypeScript and Tailwind CSS. Pages: `/` (landing), `/services`, `/cakes` (catalogue), `/cakes/<slug>` (customiser; choices are kept in the URL), `/cart`, `/checkout`, `/order/<number>` (signed order page) `/order/<number>/accept` / `/decline` (bakery links) and `/llms.txt`.
 Every image the site needs is listed with its generation prompt, file, size and alt text in
 [`images/prompts.json`](images/prompts.json). The images were generated with Grok's built-in image generation
 (no API keys or image scripts in this repo) and live in `public/images` as WebP files sized for phones.

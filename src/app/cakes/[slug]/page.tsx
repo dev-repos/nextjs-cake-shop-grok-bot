@@ -3,8 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { CakeCustomiser } from "@/components/CakeCustomiser";
+import { JsonLd } from "@/components/JsonLd";
 import { SiteImage } from "@/components/SiteImage";
-import { cakes, fromPrice, getCake } from "@/lib/cakes";
+import { cakes, fromPrice, getCake, MIN_LEAD_DAYS, SIZES } from "@/lib/cakes";
+import { cakeJsonLd } from "@/lib/structured-data";
 import { usd } from "@/lib/site";
 
 export const dynamicParams = false;
@@ -30,6 +32,7 @@ export default async function CakePage({ params }: PageProps<"/cakes/[slug]">) {
 
   return (
     <div className="mx-auto max-w-6xl px-5 pt-4 md:pt-8 lg:pb-20">
+      <JsonLd data={cakeJsonLd(cake)} />
       <nav aria-label="Breadcrumb" className="-my-1.5 text-sm text-cocoa-500">
         <ol className="flex flex-wrap items-center gap-1.5">
           <li>
@@ -60,6 +63,25 @@ export default async function CakePage({ params }: PageProps<"/cakes/[slug]">) {
             From <span className="font-semibold text-raspberry-700">{usd(fromPrice(cake))}</span> for a
             6 inch cake. We confirm every order by email and you pay by PayPal invoice.
           </p>
+          <section aria-labelledby="sizes-heading" className="mt-4 rounded-2xl bg-cream-100 p-4">
+            <h2 id="sizes-heading" className="font-semibold text-cocoa-900">
+              Sizes and prices (US dollars)
+            </h2>
+            <ul className="mt-1 text-cocoa-800">
+              {SIZES.map((size) => (
+                <li key={size.inches} className="flex justify-between gap-3">
+                  <span>
+                    {size.inches} inch, {size.serves.toLowerCase()}
+                  </span>
+                  <span className="font-semibold tabular-nums">{usd(cake.prices[size.inches])}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-2 text-sm text-cocoa-700">
+              Order at least {MIN_LEAD_DAYS} days before pickup. Some flavours and frostings add a small charge, shown
+              next to each choice.
+            </p>
+          </section>
         </div>
 
         <Suspense fallback={<CustomiserFallback />}>

@@ -66,6 +66,8 @@ export function CakeCustomiser({ slug }: { slug: string }) {
     ? `Pickup needs at least ${MIN_LEAD_DAYS} days' notice. The earliest date is ${formatDate(minDate)}.`
     : "";
   const flavour = FLAVOURS.find((f) => f.id === choices.flavour) as Option;
+  // A specific, self-describing button name, e.g. "Add 8-inch Pistachio Rose to cart".
+  const addLabel = `Add ${choices.size}-inch ${cake.name} to cart`;
   const frosting = FROSTINGS.find((f) => f.id === choices.frosting) as Option;
 
   const addToCart = () => {
@@ -214,7 +216,7 @@ export function CakeCustomiser({ slug }: { slug: string }) {
           Confirmed by email, then paid by PayPal invoice. No payment now.
         </p>
         <div className="mt-4 hidden lg:block">
-          <AddToCartButton onClick={addToCart} />
+          <AddToCartButton onClick={addToCart} label={addLabel} />
           <Notice text={notice} added={added} tone="dark" />
         </div>
       </section>
@@ -223,15 +225,13 @@ export function CakeCustomiser({ slug }: { slug: string }) {
           so it never covers the footer or the last field. */}
       <div className="sticky bottom-0 z-10 -mx-5 border-t border-cocoa-900/10 bg-cream-50/95 px-5 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_-12px_rgba(44,26,17,0.25)] backdrop-blur lg:hidden">
         <Notice text={notice} added={added} tone="light" />
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="text-xs text-cocoa-500">
-              {choices.size} inch · {flavour.name}
-            </p>
-            <p className="font-display text-2xl font-semibold text-cocoa-900">{usd(price.total)}</p>
-          </div>
-          <AddToCartButton onClick={addToCart} />
+        <div className="mb-2 flex items-baseline justify-between gap-4">
+          <p className="min-w-0 text-sm text-cocoa-700">
+            {choices.size} inch · {flavour.name} · {frosting.name}
+          </p>
+          <p className="shrink-0 font-display text-2xl font-semibold text-cocoa-900">{usd(price.total)}</p>
         </div>
+        <AddToCartButton onClick={addToCart} label={addLabel} />
       </div>
     </div>
   );
@@ -307,14 +307,18 @@ function ChoiceCard({
   aside: string;
 }) {
   return (
-    <label className="flex min-h-16 cursor-pointer flex-col justify-between rounded-2xl border border-cocoa-900/15 bg-cream-50 p-3 text-cocoa-900 transition hover:border-raspberry-600/60 has-checked:border-raspberry-600 has-checked:bg-raspberry-100 has-checked:ring-1 has-checked:ring-raspberry-600 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-raspberry-600">
+    <label className="relative flex min-h-16 cursor-pointer flex-col justify-between rounded-2xl border border-cocoa-900/15 bg-cream-50 p-3 text-cocoa-900 transition hover:border-raspberry-600/60 has-checked:border-raspberry-600 has-checked:bg-raspberry-100 has-checked:ring-1 has-checked:ring-raspberry-600 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-raspberry-600">
       <input
         type="radio"
         name={name}
         value={value}
         checked={checked}
         onChange={onChange}
-        className="sr-only"
+        // A clean name for assistive tech and browser agents, e.g. "8 inch, Serves 14–18, $82".
+        aria-label={[title, subtitle, aside].filter(Boolean).join(", ")}
+        // The (transparent) radio covers the whole card, so a click or tap anywhere on the card,
+        // including one aimed at the radio's own position by a browser agent, lands on the radio itself.
+        className="absolute inset-0 z-10 m-0 h-full w-full cursor-pointer appearance-none rounded-2xl opacity-0"
       />
       <span className="text-sm leading-snug font-semibold">{title}</span>
       {subtitle ? (
@@ -339,14 +343,14 @@ function Row({ label, value }: { label: string; value: string }) {
   );
 }
 
-function AddToCartButton({ onClick }: { onClick: () => void }) {
+function AddToCartButton({ onClick, label }: { onClick: () => void; label: string }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex min-h-12 w-auto items-center justify-center rounded-full bg-raspberry-600 px-6 font-semibold text-white shadow-lg shadow-raspberry-600/25 transition hover:bg-raspberry-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-raspberry-600 lg:w-full"
+      className="flex min-h-12 w-full items-center justify-center rounded-full bg-raspberry-600 px-6 py-2 text-center leading-snug font-semibold text-white shadow-lg shadow-raspberry-600/25 transition hover:bg-raspberry-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-raspberry-600"
     >
-      Add to cart
+      {label}
     </button>
   );
 }
