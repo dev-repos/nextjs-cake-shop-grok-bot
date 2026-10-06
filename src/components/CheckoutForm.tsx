@@ -8,7 +8,7 @@ import { CartLines } from "@/components/CartLines";
 import { formatDate, localIsoDate, MIN_LEAD_DAYS } from "@/lib/cakes";
 import { cartTotal, clearCart, useCart } from "@/lib/cart";
 import type { CheckoutField, CheckoutState } from "@/lib/order";
-import { NO_PAYMENT_NOTE, NOTES_MAX } from "@/lib/order-config";
+import { HONEYPOT_FIELD, NO_PAYMENT_NOTE, NOTES_MAX } from "@/lib/order-config";
 import { usd } from "@/lib/site";
 
 const noopSubscribe = () => () => {};
@@ -126,6 +126,13 @@ export function CheckoutForm() {
         </div>
 
         <input type="hidden" name="items" value={items} />
+
+        {/* Honeypot for bots: off-screen, not focusable, and hidden from assistive tech and
+            accessibility-tree based browser agents. People and real agents never fill it in. */}
+        <div aria-hidden="true" inert className="absolute -left-[9999px] h-px w-px overflow-hidden">
+          <label htmlFor={id(HONEYPOT_FIELD)}>Leave this field empty</label>
+          <input id={id(HONEYPOT_FIELD)} name={HONEYPOT_FIELD} type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
+        </div>
 
         <div className="grid gap-5 sm:grid-cols-2">
           <Field id={id("name")} label="Name" error={errors.name} className="sm:col-span-2">

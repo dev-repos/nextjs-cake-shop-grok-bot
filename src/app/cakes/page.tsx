@@ -32,10 +32,8 @@ export default function CakesPage() {
         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {cakes.map((cake, index) => (
             <li key={cake.slug}>
-              <Link
-                href={`/cakes/${cake.slug}`}
-                className="group flex h-full flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-cocoa-900/5 transition hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-raspberry-600"
-              >
+              {/* The whole card is clickable through the title link's stretched ::after, so the link's name is just the cake name. */}
+              <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-cocoa-900/5 transition hover:shadow-md has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-raspberry-600">
                 <div className="overflow-hidden">
                   <SiteImage
                     id={cake.imageId}
@@ -45,7 +43,11 @@ export default function CakesPage() {
                   />
                 </div>
                 <div className="flex flex-1 flex-col p-5">
-                  <h2 className="text-xl font-semibold text-cocoa-900">{cake.name}</h2>
+                  <h2 className="text-xl font-semibold text-cocoa-900">
+                    <Link href={`/cakes/${cake.slug}`} className="outline-none after:absolute after:inset-0 after:rounded-3xl">
+                      {cake.name}
+                    </Link>
+                  </h2>
                   <p className="mt-1 flex-1 text-cocoa-700">{cake.description}</p>
                   <div className="mt-4 flex items-end justify-between gap-3">
                     <p className="text-sm text-cocoa-500">
@@ -55,12 +57,12 @@ export default function CakesPage() {
                       </span>
                       <span className="block text-xs">6 inch, serves 8–10</span>
                     </p>
-                    <span className="inline-flex min-h-11 items-center rounded-full bg-raspberry-600 px-5 text-sm font-semibold text-white transition group-hover:bg-raspberry-700">
+                    <span aria-hidden="true" className="inline-flex min-h-11 items-center rounded-full bg-raspberry-600 px-5 text-sm font-semibold text-white transition group-hover:bg-raspberry-700">
                       Customise
                     </span>
                   </div>
                 </div>
-              </Link>
+              </article>
             </li>
           ))}
         </ul>
