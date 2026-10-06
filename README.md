@@ -22,7 +22,7 @@ npm run lint
 npm run build
 ```
 
-Built with Next.js (App Router), TypeScript and Tailwind CSS. Pages: `/` (landing) and `/services`.
+Built with Next.js (App Router), TypeScript and Tailwind CSS. Pages: `/` (landing), `/services`, `/cakes` (catalogue) and `/cakes/<slug>` (customiser; choices are kept in the URL).
 Every image the site needs is listed with its generation prompt, file, size and alt text in
 [`images/prompts.json`](images/prompts.json). The images were generated with Grok's built-in image generation
 (no API keys or image scripts in this repo) and live in `public/images` as WebP files sized for phones.

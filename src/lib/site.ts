@@ -30,33 +30,6 @@ export const orderSteps = [
   },
 ];
 
-export const featuredCakes = [
-  {
-    name: "Raspberry Chocolate Torte",
-    description: "Dark chocolate sponge, raspberry jam and a glossy mirror glaze.",
-    from: 58,
-    imageId: "featured-raspberry-chocolate-torte",
-  },
-  {
-    name: "Vanilla Bean & Berries",
-    description: "Light vanilla layers, whipped cream and a pile of summer fruit.",
-    from: 52,
-    imageId: "featured-vanilla-berry",
-  },
-  {
-    name: "Salted Caramel Drip",
-    description: "Milk chocolate frosting, salted caramel drip and caramel brittle.",
-    from: 60,
-    imageId: "featured-salted-caramel-drip",
-  },
-  {
-    name: "Lemon Elderflower",
-    description: "Zesty lemon sponge, elderflower cream and edible flowers.",
-    from: 55,
-    imageId: "featured-lemon-elderflower",
-  },
-];
-
 export const reviews = [
   {
     quote:

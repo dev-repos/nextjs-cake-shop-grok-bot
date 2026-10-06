@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { SiteImage } from "@/components/SiteImage";
-import { featuredCakes, orderSteps, reviews, usd } from "@/lib/site";
+import { cakes, fromPrice } from "@/lib/cakes";
+import { orderSteps, reviews, usd } from "@/lib/site";
 
-// The cake designer arrives in step 4 (/cakes). Until then the button takes
-// people to the services and prices.
-const DESIGN_HREF = "/services";
+const featuredCakes = cakes.slice(0, 4);
+
+const DESIGN_HREF = "/cakes";
 
 export default function Home() {
   return (
@@ -84,33 +85,40 @@ export default function Home() {
               <p className="mt-2 text-cocoa-700">Our most-loved bakes, ready to make your own.</p>
             </div>
             <Link
-              href="/services"
+              href="/cakes"
               className="text-sm font-semibold text-raspberry-700 underline-offset-4 hover:underline"
             >
-              See all services &amp; prices →
+              See all six cakes →
             </Link>
           </div>
           <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {featuredCakes.map((cake) => (
-              <li
-                key={cake.name}
-                className="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-cocoa-900/5"
-              >
-                <SiteImage
-                  id={cake.imageId}
-                  sizes="(min-width: 1152px) 268px, (min-width: 1024px) calc(25vw - 25px), (min-width: 640px) calc(50vw - 30px), calc(100vw - 40px)"
-                  className="aspect-[4/3] h-auto w-full"
-                />
-                <div className="p-5">
-                  <h3 className="text-lg font-semibold text-cocoa-900">{cake.name}</h3>
-                  <p className="mt-1 text-sm text-cocoa-700">{cake.description}</p>
-                  <p className="mt-3 text-sm text-cocoa-500">
-                    From{" "}
-                    <span className="text-base font-semibold text-raspberry-700">
-                      {usd(cake.from)}
-                    </span>
-                  </p>
-                </div>
+              <li key={cake.slug}>
+                <Link
+                  href={`/cakes/${cake.slug}`}
+                  className="group block h-full overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-cocoa-900/5 transition hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-raspberry-600"
+                >
+                  <SiteImage
+                    id={cake.imageId}
+                    sizes="(min-width: 1152px) 268px, (min-width: 1024px) calc(25vw - 25px), (min-width: 640px) calc(50vw - 30px), calc(100vw - 40px)"
+                    className="aspect-[4/3] h-auto w-full transition duration-300 group-hover:scale-[1.02]"
+                  />
+                  <div className="p-5">
+                    <h3 className="text-lg font-semibold text-cocoa-900">{cake.name}</h3>
+                    <p className="mt-1 text-sm text-cocoa-700">{cake.description}</p>
+                    <p className="mt-3 flex items-center justify-between text-sm text-cocoa-500">
+                      <span>
+                        From{" "}
+                        <span className="text-base font-semibold text-raspberry-700">
+                          {usd(fromPrice(cake))}
+                        </span>
+                      </span>
+                      <span className="font-semibold text-raspberry-700 group-hover:underline">
+                        Customise →
+                      </span>
+                    </p>
+                  </div>
+                </Link>
               </li>
             ))}
           </ul>
