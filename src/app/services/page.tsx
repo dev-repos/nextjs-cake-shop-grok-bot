@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ImagePlaceholder } from "@/components/ImagePlaceholder";
+import { SiteImage } from "@/components/SiteImage";
 import { services, usd } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -48,9 +48,12 @@ export default function ServicesPage() {
             id={service.slug}
             className="scroll-mt-20 overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-cocoa-900/5 md:grid md:grid-cols-2"
           >
-            <ImagePlaceholder
+            <SiteImage
               id={service.imageId}
-              className={`h-full w-full ${index % 2 === 1 ? "md:order-2" : ""}`}
+              sizes="(min-width: 1152px) 556px, (min-width: 768px) calc(50vw - 20px), calc(100vw - 40px)"
+              className={`aspect-[3/2] h-auto w-full md:aspect-auto md:h-full ${
+                index % 2 === 1 ? "md:order-2" : ""
+              }`}
             />
             <div className="flex flex-col p-6 md:p-10">
               <h2 className="font-display text-2xl font-semibold text-cocoa-900 md:text-3xl">
