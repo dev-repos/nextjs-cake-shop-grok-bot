@@ -23,6 +23,11 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link href="/cakes" className="hover:text-raspberry-300">
+                Cakes
+              </Link>
+            </li>
+            <li>
               <Link href="/services" className="hover:text-raspberry-300">
                 Services &amp; prices
               </Link>

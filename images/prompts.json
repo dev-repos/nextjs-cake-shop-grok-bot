@@ -18,7 +18,9 @@
       "id": "featured-raspberry-chocolate-torte",
       "file": "public/images/featured-raspberry-chocolate-torte.webp",
       "usedOn": [
-        "/ (featured cakes)"
+        "/ (featured cakes)",
+        "/cakes (catalogue)",
+        "/cakes/raspberry-chocolate-torte (customiser)"
       ],
       "aspectRatio": "4:3",
       "width": 960,
@@ -30,7 +32,9 @@
       "id": "featured-vanilla-berry",
       "file": "public/images/featured-vanilla-berry.webp",
       "usedOn": [
-        "/ (featured cakes)"
+        "/ (featured cakes)",
+        "/cakes (catalogue)",
+        "/cakes/vanilla-bean-berries (customiser)"
       ],
       "aspectRatio": "4:3",
       "width": 960,
@@ -42,7 +46,9 @@
       "id": "featured-salted-caramel-drip",
       "file": "public/images/featured-salted-caramel-drip.webp",
       "usedOn": [
-        "/ (featured cakes)"
+        "/ (featured cakes)",
+        "/cakes (catalogue)",
+        "/cakes/salted-caramel-drip (customiser)"
       ],
       "aspectRatio": "4:3",
       "width": 960,
@@ -54,7 +60,9 @@
       "id": "featured-lemon-elderflower",
       "file": "public/images/featured-lemon-elderflower.webp",
       "usedOn": [
-        "/ (featured cakes)"
+        "/ (featured cakes)",
+        "/cakes (catalogue)",
+        "/cakes/lemon-elderflower (customiser)"
       ],
       "aspectRatio": "4:3",
       "width": 960,
@@ -121,6 +129,32 @@
       "height": 720,
       "alt": "Dessert table with a tiered centrepiece cake, macarons, mini tarts, cake pops and mousse cups",
       "prompt": "Landscape 3:2 photo of a beautifully styled event dessert table: a two-tier cream and raspberry centrepiece cake in the middle, surrounded by cake stands of pastel pink and chocolate macarons, mini fruit tarts, chocolate-dipped strawberries, cake pops and small glass jars of chocolate mousse. Cream tablecloth, a soft floral garland of pink and white flowers along the front, warm evening event lighting with blurred guests-free background. Abundant, elegant, appetising. No text, no signs, no logos, no people."
+    },
+    {
+      "id": "cake-pistachio-rose",
+      "file": "public/images/cake-pistachio-rose.webp",
+      "usedOn": [
+        "/cakes (catalogue)",
+        "/cakes/pistachio-rose (customiser)"
+      ],
+      "aspectRatio": "4:3",
+      "width": 960,
+      "height": 720,
+      "alt": "Pistachio layer cake with pale green buttercream, topped with chopped pistachios, dried rose petals and fresh raspberries on a cream cake stand",
+      "prompt": "Landscape 4:3 photo of a pistachio rose layer cake on a pale ceramic cake stand: two golden sponge layers with a pistachio cream filling, covered in smooth pale green pistachio buttercream, the top scattered with chopped pistachios, dried pink rose petals and a small cluster of fresh raspberries. Soft cream linen and a blush-pink napkin, a little bowl of raspberries and a dish of rose petals and pistachios to the side, warm diffused daylight against a cream plaster wall. Appetising, realistic texture. No text, no lettering, no logos, no watermark, no people."
+    },
+    {
+      "id": "cake-red-velvet",
+      "file": "public/images/cake-red-velvet.webp",
+      "usedOn": [
+        "/cakes (catalogue)",
+        "/cakes/classic-red-velvet (customiser)"
+      ],
+      "aspectRatio": "4:3",
+      "width": 960,
+      "height": 720,
+      "alt": "Red velvet cake with cream cheese frosting, piped rosettes and raspberries, a slice cut away to show three red layers",
+      "prompt": "Landscape 4:3 photo of a classic red velvet cake on a white cake stand: three deep red velvet layers with thick cream cheese frosting between them, the outside frosted in smooth cream cheese with red velvet crumbs pressed around the base, topped with piped cream cheese rosettes, a sprinkle of red crumbs and fresh raspberries. A large slice cut away to show the layers. Pale wood table, cream linen, a bowl of raspberries and soft white flowers blurred in the background, warm natural light. Appetising, realistic texture. No text, no lettering, no logos, no watermark, no people."
     }
   ]
 }

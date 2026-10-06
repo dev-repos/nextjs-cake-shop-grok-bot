@@ -10,12 +10,18 @@ export function SiteHeader() {
           <span className="sr-only"> – {site.tagline}</span>
         </Link>
         <nav aria-label="Main" className="flex items-center gap-1 text-sm font-medium">
-          <Link href="/" className="rounded-full px-3 py-2 text-cocoa-800 hover:bg-cream-200">
+          <Link
+            href="/"
+            className="hidden rounded-full px-2.5 py-2 sm:px-3 text-cocoa-800 hover:bg-cream-200 sm:inline-block"
+          >
             Home
+          </Link>
+          <Link href="/cakes" className="rounded-full px-2.5 py-2 sm:px-3 text-cocoa-800 hover:bg-cream-200">
+            Cakes
           </Link>
           <Link
             href="/services"
-            className="rounded-full px-3 py-2 text-cocoa-800 hover:bg-cream-200"
+            className="rounded-full px-2.5 py-2 sm:px-3 text-cocoa-800 hover:bg-cream-200"
           >
             Services
           </Link>
