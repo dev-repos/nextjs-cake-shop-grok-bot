@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useId, useState, useSyncExternalStore } from "react";
 import {
@@ -20,6 +21,7 @@ import {
   type SizeInches,
   surchargeFor,
 } from "@/lib/cakes";
+import { addToCart as addLineToCart } from "@/lib/cart";
 import { usd } from "@/lib/site";
 
 const noopSubscribe = () => () => {};
@@ -39,6 +41,7 @@ export function CakeCustomiser({ slug }: { slug: string }) {
   const searchParams = useSearchParams();
   const [choices, setChoices] = useState<Choices>(() => parseChoices(cake, searchParams));
   const [notice, setNotice] = useState("");
+  const [added, setAdded] = useState(false);
   const minDate = useMinPickupDate();
   const ids = { message: useId(), date: useId(), counter: useId(), dateHelp: useId() };
 
@@ -53,6 +56,7 @@ export function CakeCustomiser({ slug }: { slug: string }) {
 
   const update = (patch: Partial<Choices>) => {
     setNotice("");
+    setAdded(false);
     setChoices((current) => ({ ...current, ...patch }));
   };
 
@@ -75,9 +79,9 @@ export function CakeCustomiser({ slug }: { slug: string }) {
       document.getElementById(ids.date)?.focus();
       return;
     }
-    setNotice(
-      "Your design is ready. The cart is coming soon. Until then, this page's link saves every choice, so you can bookmark or share it.",
-    );
+    addLineToCart(cake.slug, choices);
+    setNotice("");
+    setAdded(true);
   };
 
   return (
@@ -208,14 +212,14 @@ export function CakeCustomiser({ slug }: { slug: string }) {
         </p>
         <div className="mt-4 hidden lg:block">
           <AddToCartButton onClick={addToCart} />
-          <Notice text={notice} tone="dark" />
+          <Notice text={notice} added={added} tone="dark" />
         </div>
       </section>
 
       {/* Phone: sticky bar at the bottom of the screen. It sits in the page flow,
           so it never covers the footer or the last field. */}
       <div className="sticky bottom-0 z-10 -mx-5 border-t border-cocoa-900/10 bg-cream-50/95 px-5 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_-12px_rgba(44,26,17,0.25)] backdrop-blur lg:hidden">
-        <Notice text={notice} tone="light" />
+        <Notice text={notice} added={added} tone="light" />
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-xs text-cocoa-500">
@@ -344,20 +348,30 @@ function AddToCartButton({ onClick }: { onClick: () => void }) {
   );
 }
 
-function Notice({ text, tone }: { text: string; tone: "light" | "dark" }) {
+function Notice({ text, added, tone }: { text: string; added: boolean; tone: "light" | "dark" }) {
+  const visible = Boolean(text) || added;
   return (
     <p
       role="status"
       aria-live="polite"
       className={
-        text
-          ? `mb-3 rounded-2xl px-3 py-2 text-sm ${
+        visible
+          ? `mb-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 rounded-2xl px-3 py-2 text-sm ${
               tone === "dark" ? "mt-3 bg-cream-50/10 text-cream-50" : "bg-raspberry-100 text-raspberry-700"
             }`
           : "sr-only"
       }
     >
-      {text}
+      {added ? (
+        <>
+          <span className="font-medium">Added to your cart.</span>
+          <Link href="/cart" className="font-semibold underline underline-offset-2">
+            View cart →
+          </Link>
+        </>
+      ) : (
+        text
+      )}
     </p>
   );
 }
