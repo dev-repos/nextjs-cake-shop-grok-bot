@@ -25,7 +25,15 @@ function splitName(full: string): { given_name: string; surname: string } {
     : { given_name: parts[0] ?? "", surname: "" };
 }
 
-export function buildDraftInvoice(order: OrderPayload, orderUrl: string, invoicerEmail: string) {
+/** PayPal wants country code and national number separately; US/Canada numbers are split, others sent as-is. */
+function phoneFor(raw: string) {
+  const digits = raw.replace(/\D/g, "");
+  return digits.length === 11 && digits.startsWith("1")
+    ? { country_code: "1", national_number: digits.slice(1), phone_type: "MOBILE" }
+    : { national_number: digits.slice(-14), phone_type: "MOBILE" };
+}
+
+export function buildDraftInvoice(order: OrderPayload, siteOrigin: string, invoicerEmail: string) {
   const today = new Date().toISOString().slice(0, 10);
   return {
     detail: {
@@ -33,21 +41,22 @@ export function buildDraftInvoice(order: OrderPayload, orderUrl: string, invoice
       reference: order.n,
       invoice_date: today,
       currency_code: "USD",
-      note: `Thank you for your Frostwell Cakes order ${order.n}. Pickup on ${order.d}. Order details: ${orderUrl}`,
+      // The signed order link is deliberately left out so it isn't stored at PayPal or in logs.
+      note: `Thank you for your Frostwell Cakes order ${order.n}. Pickup on ${order.d} at our Portland kitchen.`,
       term: "Payment is due before pickup.",
       payment_term: { term_type: "DUE_ON_RECEIPT" },
     },
     invoicer: {
       business_name: "Frostwell Cakes",
       email_address: invoicerEmail,
-      website: orderUrl.split("/order/")[0],
+      website: siteOrigin,
     },
     primary_recipients: [
       {
         billing_info: {
           name: splitName(order.c.n),
           email_address: order.c.e,
-          phones: [{ national_number: order.c.p.replace(/\D/g, "").slice(-14), phone_type: "MOBILE" }],
+          phones: [phoneFor(order.c.p)],
         },
       },
     ],
@@ -74,10 +83,10 @@ export type InvoiceStubResult = { id: string; status: "SENT"; total: string };
 /** Log the two Invoicing v2 calls a real integration would make. No network access. */
 export async function createAndSendInvoiceStub(
   order: OrderPayload,
-  orderUrl: string,
+  siteOrigin: string,
   invoicerEmail: string,
 ): Promise<InvoiceStubResult> {
-  const draft = buildDraftInvoice(order, orderUrl, invoicerEmail);
+  const draft = buildDraftInvoice(order, siteOrigin, invoicerEmail);
   const id = `INV2-STUB-${order.n.slice(3)}`;
   console.info(
     [

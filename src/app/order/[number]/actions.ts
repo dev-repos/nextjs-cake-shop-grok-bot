@@ -52,7 +52,7 @@ export async function confirmOrder(_prev: DecisionState, formData: FormData): Pr
     console.error(`[orders] Confirmation email for ${order.n} failed:`, error instanceof Error ? error.message : error);
     return { status: "error", message: "The confirmation email couldn't be sent, so the order is not confirmed yet. Please try again." };
   }
-  const invoice = await createAndSendInvoiceStub(order, orderLink, bakery);
+  const invoice = await createAndSendInvoiceStub(order, origin, bakery);
   await rememberOutcome(order.n, "confirmed");
   console.info(`[orders] Order ${order.n} confirmed; customer emailed; PayPal invoice ${invoice.id} (stub) for $${invoice.total} USD.`);
 
