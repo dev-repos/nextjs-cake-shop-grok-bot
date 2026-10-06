@@ -63,23 +63,52 @@ function Detail({ label, wide, children }: { label: string; wide?: boolean; chil
   );
 }
 
-export function OrderLinkError({ reason }: { reason: "invalid" | "config" }) {
+export type OrderPageError = "invalid" | "config" | "expired" | "confirmed" | "declined";
+
+const ERRORS: Record<OrderPageError, { title: string; body: string }> = {
+  invalid: {
+    title: "This order link isn't valid",
+    body: "It may have been changed, copied incompletely, or belong to a different order. Please use the exact link from your email, or reply to that email and we'll help.",
+  },
+  config: {
+    title: "Order pages are temporarily unavailable",
+    body: "The site isn't fully set up yet. Please email hello@frostwellcakes.example.",
+  },
+  expired: {
+    title: "This link has expired",
+    body: "Accept and decline links stop working 30 days after the order or once the pickup date has passed. Please contact the customer directly using the details in the order email.",
+  },
+  confirmed: {
+    title: "This order was already confirmed",
+    body: "This link has already been used to confirm the order, and the customer has been emailed. Nothing was sent again.",
+  },
+  declined: {
+    title: "This order was already declined",
+    body: "This link has already been used to decline the order, and the customer has been emailed. Nothing was sent again.",
+  },
+};
+
+export function OrderLinkError({ reason, at }: { reason: OrderPageError; at?: number }) {
+  const { title, body } = ERRORS[reason];
   return (
     <div role="alert" className="mt-6 rounded-3xl border border-raspberry-600/30 bg-raspberry-100 p-6 text-raspberry-700">
-      {reason === "config" ? (
-        <>
-          <p className="text-lg font-semibold">Order pages are temporarily unavailable</p>
-          <p className="mt-1">The site isn&apos;t fully set up yet. Please email hello@frostwellcakes.example.</p>
-        </>
-      ) : (
-        <>
-          <p className="text-lg font-semibold">This order link isn&apos;t valid</p>
-          <p className="mt-1">
-            It may have been changed or copied incompletely. Please use the exact link from your email, or reply to that
-            email and we&apos;ll help.
-          </p>
-        </>
-      )}
+      <p className="text-lg font-semibold">{title}</p>
+      <p className="mt-1">
+        {body}
+        {at ? <> (On {formatDateTime(at)}.)</> : null}
+      </p>
     </div>
   );
+}
+
+export function formatDateTime(unixSeconds: number): string {
+  return new Date(unixSeconds * 1000).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "America/Los_Angeles",
+    timeZoneName: "short",
+  });
 }

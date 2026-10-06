@@ -2,7 +2,7 @@ import "server-only";
 import { createHmac, randomInt, timingSafeEqual } from "node:crypto";
 import { deflateRawSync, inflateRawSync } from "node:zlib";
 import { z } from "zod";
-import { cartItemSchema } from "@/lib/order";
+import { bakeryToday, cartItemSchema } from "@/lib/order";
 
 /**
  * Signed order links (no database).
@@ -10,11 +10,18 @@ import { cartItemSchema } from "@/lib/order";
  * The order is stored in the link itself: `d` is the order as compact JSON,
  * deflated and base64url-encoded. `sig` is HMAC-SHA256 with ORDER_SECRET over
  * "fw1.<purpose>.<orderNumber>.<d>", so each link only works for one purpose
- * (view, accept or decline) and one order. Signatures are compared in
- * constant time.
+ * and one order. Signatures are compared in constant time.
+ *
+ * Purposes:
+ * - view: the customer's order page (status "Awaiting confirmation")
+ * - confirmed: the order page link sent after the bakery confirms (status "Confirmed")
+ * - accept / decline: the bakery's links. These expire (see ACTION_LINK_MAX_AGE_DAYS).
  */
 
-export type LinkPurpose = "view" | "accept" | "decline";
+export type LinkPurpose = "view" | "confirmed" | "accept" | "decline";
+
+/** Bakery accept/decline links stop working after this many days, or once the pickup date has passed. */
+export const ACTION_LINK_MAX_AGE_DAYS = 30;
 
 export class OrderConfigError extends Error {}
 
@@ -83,26 +90,58 @@ function encodePayload(payload: OrderPayload): string {
   return deflateRawSync(Buffer.from(JSON.stringify(payload), "utf8")).toString("base64url");
 }
 
+/** HMAC-SHA256 with ORDER_SECRET, base64url. Throws OrderConfigError if unset in production. */
+export function hmac(message: string): string {
+  return createHmac("sha256", orderSecret()).update(message).digest("base64url");
+}
+
+/** Constant-time comparison of two base64url HMACs. */
+export function safeEqual(given: string, expected: string): boolean {
+  const a = Buffer.from(given, "base64url");
+  const b = Buffer.from(expected, "base64url");
+  return a.length === b.length && timingSafeEqual(a, b);
+}
+
 function sign(purpose: LinkPurpose, orderNumber: string, data: string): string {
-  return createHmac("sha256", orderSecret())
-    .update(`fw1.${purpose}.${orderNumber}.${data}`)
-    .digest("base64url");
+  return hmac(`fw1.${purpose}.${orderNumber}.${data}`);
 }
 
 export type SignedLink = { path: string; data: string; sig: string };
 
-export function signedOrderLinks(payload: OrderPayload): Record<LinkPurpose, SignedLink> {
-  const data = encodePayload(payload);
-  const make = (purpose: LinkPurpose, suffix: string): SignedLink => {
-    const sig = sign(purpose, payload.n, data);
-    return { data, sig, path: `/order/${payload.n}${suffix}?d=${data}&sig=${sig}` };
-  };
-  return { view: make("view", ""), accept: make("accept", "/accept"), decline: make("decline", "/decline") };
+const LINK_SUFFIX: Record<LinkPurpose, string> = {
+  view: "",
+  confirmed: "",
+  accept: "/accept",
+  decline: "/decline",
+};
+
+/** Build the signed link for one purpose. `data` lets callers reuse an already-encoded order. */
+export function signedOrderLink(purpose: LinkPurpose, payload: OrderPayload, data = encodePayload(payload)): SignedLink {
+  const sig = sign(purpose, payload.n, data);
+  const status = purpose === "confirmed" ? "&st=confirmed" : "";
+  return { data, sig, path: `/order/${payload.n}${LINK_SUFFIX[purpose]}?d=${data}&sig=${sig}${status}` };
 }
+
+export function signedOrderLinks(payload: OrderPayload): Record<"view" | "accept" | "decline", SignedLink> {
+  const data = encodePayload(payload);
+  return {
+    view: signedOrderLink("view", payload, data),
+    accept: signedOrderLink("accept", payload, data),
+    decline: signedOrderLink("decline", payload, data),
+  };
+}
+
+/** True when a bakery action link is too old or the pickup date has passed (bakery calendar). */
+export function actionLinkExpired(order: OrderPayload, now = new Date()): boolean {
+  const ageDays = (now.getTime() / 1000 - order.t) / 86400;
+  return ageDays > ACTION_LINK_MAX_AGE_DAYS || order.d < bakeryToday(now);
+}
+
+export type LinkError = "invalid" | "config" | "expired";
 
 export type VerifyResult =
   | { ok: true; order: OrderPayload }
-  | { ok: false; reason: "invalid" | "config" };
+  | { ok: false; reason: LinkError };
 
 /** Verify a signed link for one purpose and order number. */
 export function verifyOrderLink(
@@ -114,21 +153,23 @@ export function verifyOrderLink(
   if (!ORDER_NUMBER.test(orderNumber) || !data || !sig || data.length > MAX_ENCODED_LENGTH) {
     return { ok: false, reason: "invalid" };
   }
-  let expected: Buffer;
+  let expected: string;
   try {
-    expected = Buffer.from(sign(purpose, orderNumber, data), "base64url");
+    expected = sign(purpose, orderNumber, data);
   } catch (error) {
     if (error instanceof OrderConfigError) return { ok: false, reason: "config" };
     throw error;
   }
-  const given = Buffer.from(sig, "base64url");
-  if (given.length !== expected.length || !timingSafeEqual(given, expected)) {
+  if (!safeEqual(sig, expected)) {
     return { ok: false, reason: "invalid" };
   }
   try {
     const json = inflateRawSync(Buffer.from(data, "base64url"), { maxOutputLength: 64 * 1024 });
     const order = orderPayloadSchema.parse(JSON.parse(json.toString("utf8")));
     if (order.n !== orderNumber) return { ok: false, reason: "invalid" };
+    if ((purpose === "accept" || purpose === "decline") && actionLinkExpired(order)) {
+      return { ok: false, reason: "expired" };
+    }
     return { ok: true, order };
   } catch {
     return { ok: false, reason: "invalid" };

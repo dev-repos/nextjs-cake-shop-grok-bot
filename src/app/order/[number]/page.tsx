@@ -4,6 +4,7 @@ import { OrderLinkError, OrderSummary } from "@/components/OrderSummary";
 import { formatDate } from "@/lib/cakes";
 import { NO_PAYMENT_NOTE } from "@/lib/order-config";
 import { verifyOrderLink } from "@/lib/server/order-token";
+import { usd } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Your order",
@@ -16,7 +17,9 @@ const first = (value: string | string[] | undefined) => (Array.isArray(value) ? 
 export default async function OrderPage({ params, searchParams }: PageProps<"/order/[number]">) {
   const { number } = await params;
   const query = await searchParams;
-  const result = verifyOrderLink("view", number, first(query.d), first(query.sig));
+  // The link in the confirmation email is signed for "confirmed"; the original link for "view".
+  const confirmed = first(query.st) === "confirmed";
+  const result = verifyOrderLink(confirmed ? "confirmed" : "view", number, first(query.d), first(query.sig));
 
   return (
     <div className="mx-auto max-w-3xl px-5 pt-8 pb-14 md:pt-12 md:pb-20">
@@ -27,15 +30,31 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/or
       ) : (
         <>
           <div className="mt-4 flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1.5 text-sm font-semibold text-amber-900 ring-1 ring-amber-300">
-              <span aria-hidden="true" className="h-2 w-2 rounded-full bg-amber-500" />
-              Awaiting confirmation
-            </span>
+            {confirmed ? (
+              <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-sm font-semibold text-emerald-900 ring-1 ring-emerald-300">
+                <span aria-hidden="true" className="h-2 w-2 rounded-full bg-emerald-600" />
+                Confirmed
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1.5 text-sm font-semibold text-amber-900 ring-1 ring-amber-300">
+                <span aria-hidden="true" className="h-2 w-2 rounded-full bg-amber-500" />
+                Awaiting confirmation
+              </span>
+            )}
             <span className="text-sm text-cocoa-700">Pickup {formatDate(result.order.d)}</span>
           </div>
           <p className="mt-4 text-cocoa-700">
-            Thanks, {result.order.c.n}! We&apos;ve got your request and emailed you a copy. Keep this page&apos;s link: it&apos;s
-            your order page.
+            {confirmed ? (
+              <>
+                Great news, {result.order.c.n}: your order is confirmed! A PayPal invoice for {usd(result.order.s)} (US
+                dollars) is on its way to {result.order.c.e}. Please pay it before your pickup date.
+              </>
+            ) : (
+              <>
+                Thanks, {result.order.c.n}! We&apos;ve got your request and emailed you a copy. Keep this page&apos;s link:
+                it&apos;s your order page.
+              </>
+            )}
           </p>
 
           <section aria-labelledby="next-steps" className="mt-6 rounded-3xl bg-cocoa-900 p-5 text-cream-50">
@@ -43,12 +62,19 @@ export default async function OrderPage({ params, searchParams }: PageProps<"/or
               What happens next
             </h2>
             <ol className="mt-3 space-y-3">
-              {[
-                ["We check your request", "A baker reviews your cakes and pickup date, usually within one working day."],
-                ["We confirm by email", "You'll get an email when your order is confirmed, or if we need to change anything."],
-                ["You pay by PayPal invoice", NO_PAYMENT_NOTE],
-                ["You pick up your cake", `Collect it from our Portland kitchen on ${formatDate(result.order.d)}.`],
-              ].map(([title, body], index) => (
+              {(confirmed
+                ? [
+                    ["Order confirmed", "A baker has checked your cakes and pickup date. You're booked in."],
+                    ["Pay your PayPal invoice", `Look out for a PayPal invoice for ${usd(result.order.s)} (USD) and pay it before pickup.`],
+                    ["You pick up your cake", `Collect it from our Portland kitchen on ${formatDate(result.order.d)}.`],
+                  ]
+                : [
+                    ["We check your request", "A baker reviews your cakes and pickup date, usually within one working day."],
+                    ["We confirm by email", "You'll get an email when your order is confirmed, or if we need to change anything."],
+                    ["You pay by PayPal invoice", NO_PAYMENT_NOTE],
+                    ["You pick up your cake", `Collect it from our Portland kitchen on ${formatDate(result.order.d)}.`],
+                  ]
+              ).map(([title, body], index) => (
                 <li key={title} className="flex gap-3">
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-cream-50 font-display text-sm font-semibold text-cocoa-900">
                     {index + 1}

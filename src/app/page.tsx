@@ -86,7 +86,7 @@ export default function Home() {
             </div>
             <Link
               href="/cakes"
-              className="text-sm font-semibold text-raspberry-700 underline-offset-4 hover:underline"
+              className="inline-flex min-h-11 items-center text-sm font-semibold text-raspberry-700 underline-offset-4 hover:underline"
             >
               See all six cakes →
             </Link>

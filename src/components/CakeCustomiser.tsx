@@ -141,6 +141,9 @@ export function CakeCustomiser({ slug }: { slug: string }) {
         <input
           id={ids.message}
           type="text"
+          autoComplete="off"
+          autoCapitalize="sentences"
+          enterKeyHint="done"
           value={choices.message}
           maxLength={MESSAGE_MAX}
           onChange={(event) => update({ message: event.target.value.slice(0, MESSAGE_MAX) })}

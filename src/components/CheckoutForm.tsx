@@ -92,7 +92,7 @@ export function CheckoutForm() {
           <h2 id={id("summary-h")} className="text-lg font-semibold text-cocoa-900">
             Your cakes
           </h2>
-          <Link href="/cart" className="text-sm font-medium text-raspberry-700 hover:underline">
+          <Link href="/cart" className="-my-2.5 inline-flex min-h-11 items-center text-sm font-medium text-raspberry-700 hover:underline">
             Edit cart
           </Link>
         </div>
@@ -114,7 +114,7 @@ export function CheckoutForm() {
                 <ul className="mt-1 list-disc pl-5">
                   {errorList.map(([field, message]) => (
                     <li key={field}>
-                      <a href={`#${id(field)}`} className="underline">
+                      <a href={`#${id(field)}`} className="inline-flex min-h-11 items-center underline">
                         {message}
                       </a>
                     </li>

@@ -2,7 +2,7 @@ import "server-only";
 import { formatDate, getCake } from "@/lib/cakes";
 import { NO_PAYMENT_NOTE, optionName } from "@/lib/order";
 import { usd } from "@/lib/site";
-import { type Email, escapeHtml } from "@/lib/server/email";
+import { type Email, escapeHtml, messageIdDomain } from "@/lib/server/email";
 import type { OrderPayload } from "@/lib/server/order-token";
 
 type Links = { view: string; accept: string; decline: string };
@@ -90,5 +90,75 @@ ${linesHtml(order)}
     subject: `We got your cake request (${order.n})`,
     text,
     html,
+  };
+}
+
+/** Sent when the bakery confirms the order. */
+export function confirmedEmail(order: OrderPayload, orderLink: string, bakery: string): Email {
+  const pickup = formatDate(order.d);
+  const text = [
+    `Hi ${order.c.n},`,
+    "",
+    `Good news: your cake order ${order.n} is confirmed!`,
+    "",
+    ...lineText(order),
+    `Total: ${usd(order.s)}`,
+    `Pickup: ${pickup}, at our Portland kitchen`,
+    "",
+    `A PayPal invoice for ${usd(order.s)} (US dollars) is on its way to this email address. Please pay it before your pickup date.`,
+    "",
+    `View your order: ${orderLink}`,
+    "",
+    "Questions? Just reply to this email.",
+    "",
+    "Frostwell Cakes",
+  ].join("\n");
+  const html = `
+<p>Hi ${escapeHtml(order.c.n)},</p>
+<p><strong>Good news: your cake order ${escapeHtml(order.n)} is confirmed!</strong></p>
+${linesHtml(order)}
+<p><strong>Total: ${usd(order.s)}</strong><br>Pickup: ${escapeHtml(pickup)}, at our Portland kitchen</p>
+<p>A PayPal invoice for ${usd(order.s)} (US dollars) is on its way to this email address. Please pay it before your pickup date.</p>
+<p><a href="${escapeHtml(orderLink)}">View your order</a></p>
+<p>Questions? Just reply to this email.</p>
+<p>Frostwell Cakes</p>`;
+  return {
+    to: order.c.e,
+    replyTo: bakery,
+    subject: `Your cake order ${order.n} is confirmed`,
+    text,
+    html,
+    messageId: `<frostwell.${order.n}.confirmed@${messageIdDomain()}>`,
+  };
+}
+
+/** Sent when the bakery declines the order. */
+export function declinedEmail(order: OrderPayload, reason: string, bakery: string): Email {
+  const text = [
+    `Hi ${order.c.n},`,
+    "",
+    `Thank you for your cake request ${order.n} for ${formatDate(order.d)}. We're sorry, but we can't make this one.`,
+    "",
+    `Reason: ${reason}`,
+    "",
+    "No payment was taken and you don't owe anything.",
+    "If a different date or design would work for you, just reply to this email and we'll be glad to help.",
+    "",
+    "Warm wishes,",
+    "Frostwell Cakes",
+  ].join("\n");
+  const html = `
+<p>Hi ${escapeHtml(order.c.n)},</p>
+<p>Thank you for your cake request ${escapeHtml(order.n)} for ${escapeHtml(formatDate(order.d))}. We're sorry, but we can't make this one.</p>
+<p><strong>Reason:</strong> ${escapeHtml(reason)}</p>
+<p>No payment was taken and you don't owe anything.<br>If a different date or design would work for you, just reply to this email and we'll be glad to help.</p>
+<p>Warm wishes,<br>Frostwell Cakes</p>`;
+  return {
+    to: order.c.e,
+    replyTo: bakery,
+    subject: `About your cake request ${order.n}`,
+    text,
+    html,
+    messageId: `<frostwell.${order.n}.declined@${messageIdDomain()}>`,
   };
 }

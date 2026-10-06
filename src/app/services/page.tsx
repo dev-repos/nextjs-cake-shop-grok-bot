@@ -30,7 +30,7 @@ export default function ServicesPage() {
                 <li key={service.slug}>
                   <a
                     href={`#${service.slug}`}
-                    className="inline-block rounded-full border border-cocoa-900/15 bg-white px-4 py-2 text-sm font-medium text-cocoa-800 hover:border-raspberry-600 hover:text-raspberry-700"
+                    className="inline-flex min-h-11 items-center rounded-full border border-cocoa-900/15 bg-white px-4 text-sm font-medium text-cocoa-800 hover:border-raspberry-600 hover:text-raspberry-700"
                   >
                     {service.name}
                   </a>

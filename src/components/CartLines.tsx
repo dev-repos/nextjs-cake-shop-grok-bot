@@ -28,7 +28,7 @@ export function CartLines({ lines, editable }: { lines: CartLine[]; editable: bo
               <div className="flex items-start justify-between gap-3">
                 <h3 className="font-semibold text-cocoa-900">
                   {editable ? (
-                    <Link href={customiseHref(line)} className="hover:underline">
+                    <Link href={customiseHref(line)} className="-my-2.5 inline-flex min-h-11 items-center hover:underline">
                       {cake.name}
                     </Link>
                   ) : (
@@ -55,7 +55,7 @@ export function CartLines({ lines, editable }: { lines: CartLine[]; editable: bo
                         onClick={() => setQuantity(line.id, line.qty - 1)}
                         disabled={line.qty <= 1}
                         aria-label={`Decrease quantity of ${cake.name}`}
-                        className="flex h-10 w-10 items-center justify-center rounded-full text-lg text-cocoa-800 hover:bg-cream-200 focus-visible:outline-2 focus-visible:outline-raspberry-600 disabled:opacity-35"
+                        className="flex h-11 w-11 items-center justify-center rounded-full text-lg text-cocoa-800 hover:bg-cream-200 focus-visible:outline-2 focus-visible:outline-raspberry-600 disabled:opacity-35"
                       >
                         −
                       </button>
@@ -67,20 +67,20 @@ export function CartLines({ lines, editable }: { lines: CartLine[]; editable: bo
                         onClick={() => setQuantity(line.id, line.qty + 1)}
                         disabled={line.qty >= MAX_QTY}
                         aria-label={`Increase quantity of ${cake.name}`}
-                        className="flex h-10 w-10 items-center justify-center rounded-full text-lg text-cocoa-800 hover:bg-cream-200 focus-visible:outline-2 focus-visible:outline-raspberry-600 disabled:opacity-35"
+                        className="flex h-11 w-11 items-center justify-center rounded-full text-lg text-cocoa-800 hover:bg-cream-200 focus-visible:outline-2 focus-visible:outline-raspberry-600 disabled:opacity-35"
                       >
                         +
                       </button>
                     </div>
                     <span className="text-xs text-cocoa-500">{usd(unit)} each</span>
-                    <span className="ml-auto flex gap-3 text-sm">
-                      <Link href={customiseHref(line)} className="font-medium text-raspberry-700 hover:underline">
+                    <span className="ml-auto flex gap-1 text-sm">
+                      <Link href={customiseHref(line)} className="inline-flex min-h-11 min-w-11 items-center justify-center px-1 font-medium text-raspberry-700 hover:underline">
                         Edit
                       </Link>
                       <button
                         type="button"
                         onClick={() => removeFromCart(line.id)}
-                        className="font-medium text-cocoa-700 hover:underline focus-visible:outline-2 focus-visible:outline-raspberry-600"
+                        className="inline-flex min-h-11 min-w-11 items-center justify-center px-1 font-medium text-cocoa-700 hover:underline focus-visible:outline-2 focus-visible:outline-raspberry-600"
                         aria-label={`Remove ${cake.name} from cart`}
                       >
                         Remove
