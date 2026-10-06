@@ -1,6 +1,16 @@
 # nextjs-cake-shop-grok-bot
 Frostwell Cakes: a mobile-first Next.js custom-cake shop built by Grok Bot from GitHub issues, driven from a phone, deployed to Vercel (AI System Design Deep Dive tutorial)
 
+**Live site:** https://nextjs-cake-shop-grok-bot.vercel.app
+
+## Deployment
+
+The site is hosted on [Vercel](https://vercel.com) as the `nextjs-cake-shop-grok-bot` project, linked to this GitHub repo:
+
+- **Production** deploys automatically from `main` to https://nextjs-cake-shop-grok-bot.vercel.app.
+- **Preview** deployments are created automatically for every pull request; Vercel posts the preview link on the PR.
+- The build needs no secrets or environment variables. If one is ever added, document it in `.env.example` only.
+
 ## Run it locally
 
 Requires Node.js 20.9 or newer.
